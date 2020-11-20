@@ -24,15 +24,21 @@ public class WebSocketController {
             String msg = "[" + nickName + "] 名稱已被使用囉~ \n換個名子重新登入吧!!";
             System.out.println(msg);
             WebSocketUtil.sendMessage(session,msg);
+            try {
+                session.close();
+            }catch (IOException e){
+                e.printStackTrace();
+            }
         }
     }
 
     @OnClose
     public void onClose(@PathParam(value = "nickName") String nickName, Session session){
-        String msg = "[" + nickName + "] 退出pollex匿名聊天室囉 QAQ";
-        System.out.println(msg);
-        WebSocketUtil.removeSession(nickName);
-        WebSocketUtil.sendMessageForAll(msg);
+        if(WebSocketUtil.removeSession(nickName,session)){
+            String msg = "[" + nickName + "] 退出pollex匿名聊天室囉 QAQ";
+            System.out.println(msg);
+            WebSocketUtil.sendMessageForAll(msg);
+        }
     }
 
     @OnMessage

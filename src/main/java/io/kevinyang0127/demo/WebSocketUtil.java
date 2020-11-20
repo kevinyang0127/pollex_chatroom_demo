@@ -19,8 +19,12 @@ public class WebSocketUtil {
         return false;
     }
 
-    public static void removeSession(String nickName){
-        ONLINE_SESSION.remove(nickName);
+    public static boolean removeSession(String nickName, Session session){
+        if(ONLINE_SESSION.get(nickName) == session){
+            ONLINE_SESSION.remove(nickName);
+            return true;
+        }
+        return false;
     }
 
     public static void sendMessage(Session session, String msg){
